@@ -1,0 +1,33 @@
+<html>
+    <body>
+    <h1> Add a new project here! </h1>
+        <form name = "proj" action = "{% url "add_project" %}"
+              method = "POST" >{% csrf_token %}
+
+
+
+ <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Project code</th>
+                    <th>Project name</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="number" name="code" required></td>
+                <td><input type="text" name="project" required></td>
+            </tr>
+            </tbody>
+ </table>
+ <div class="field">
+                <div class="one wide field">
+                    <input type="submit" value="Submit" class="ui primary button" />
+                </div>
+ </div>
+
+
+
+    </body>
+</html>

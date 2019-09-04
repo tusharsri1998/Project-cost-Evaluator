@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <form name='getcost', method="POST"
+     action='{% url 'fucking_calculations' %}'>{% csrf_token %}
+    <div class'container'>
+      <p><strong>Get Total cost till date</strong></p>
+      <label> Enter project ID</label>
+      <select class="code" required, name = 'code', id = 'code' >
+              <option value=""></option>
+              {% for i in project %}
+              <option value="{{ i.p_id }}">{{i.p_id}}</option>
+              {% endfor%}
+          </select>
+    <div>
+      <div>
+          <button type="submit", value="Submit">Submit</button>
+      </div>
+      <br>
+      <br>
+      </form>
+      <form name="days", method="POST" action="{% url 'number_days' %}">{% csrf_token %}
+        <div class'container'>
+          <p><strong>Get Summary Sheet</strong></p>
+          <label> Enter project ID</label>
+          <select class="code" required, name = 'code', id = 'code' >
+                  <option value=""></option>
+                  {% for i in project %}
+                  <option value="{{ i.p_id }}">{{i.p_id}}</option>
+                  {% endfor%}
+              </select>
+        <div>
+          <br>
+          <div>
+              <button type="submit", value="Submit">Submit</button>
+          </div>
+
+      </form>
+      <br>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+    <p>
+      Hi {{ request.user.first_name }}
+    </p>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+
+    <form name = "form1"  id = 'data_send1' action = "{% url "concept_test" %}"
+       method = "POST" >{% csrf_token %}
+
+              <table id="table" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl1" border="#729111 1px solid">
+                    <tr>
+                        <th align="center">Concept ID</th>
+                        <th align="center">Concept Name</th>
+                        <th align="center">No. of hours</th>
+
+                    </tr>
+                    <tr id="row_cp1">
+                        <div style="padding-left: 5px">
+                            <td style="padding:5px;">
+
+
+                              <select class="code" required, name = 'code', id = 'code0' onchange="get_Val(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in concept %}
+                                      <option value="{{ i.concept_id }}">{{i.concept_id}}</option>
+                                      {% endfor%}
+                                  </select>
+                            </td>
+                            <td style="padding:5px;">
+                              <select class="pname" required, name = 'Project_name', id = 'pName0' onchange="get_Val1(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in concept %}
+                                      <option value="{{ i.concept_name }}">{{i.concept_name}}</option>
+                                      {% endfor%}
+                                  </select>
+                              <!-- <input type='text' id="pName0" name="Project_name"> -->
+                            </td>
+                            <td style="padding:5px;">
+                                  <input type="number" class = 'Hours' name="hours" required, id ="hours0", min = "1", max = "16" >
+                            </td>
+
+                            <td>
+                              <input type="button" value="Add Row" onclick="add_row()" />
+                            </td>
+                            <td>
+                              <input type="button" id="delPOIbutton" value="Delete" onclick="delete_Row(this)" />
+                            </td>
+
+                        </div>
+                    </tr>
+                </table>
+
+
+              <button style = "border:0px; background-color:#4285F4; margin-top:8%;
+                 height:35px; width:30%;margin-left:5%;" type = "submit"
+                 value = "Submit" , id="submit1">
+                 <strong>Submit</strong>
+              </button>
+
+                              </form>
+                              <br>
+                              <br>
+
+                        <a href="{% url 'logout' %}">logout</a>
+
+        <script language="javascript">
+
+          var v1 =0;
+           function get_Val(str,id){
+            var xhttp = new XMLHttpRequest();
+            var xx = str;
+            var yy = id;
+            var z = 0;
+            xhttp.onreadystatechange = function() {
+
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                console.log(v1);
+                z = yy.charAt(yy.length-1);
+                var c = this.responseText;
+                document.getElementById("pName"+z).value = c;
+              }
+
+            };
+
+            xhttp.open("POST","http://127.0.0.1:8000/project/concept_code/",true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(xx));
+          };
+
+          function get_Val1(str,id){
+           var xhtp = new XMLHttpRequest();
+           var xx1 = str;
+           var yy1= id;
+           var z1 = 0;
+           xhtp.onreadystatechange = function() {
+
+             if (this.readyState == 4 && this.status == 200) {
+               console.log(this.responseText);
+               console.log(v1);
+               z1 = yy1.charAt(yy1.length-1);
+               var c = this.responseText;
+               document.getElementById("code"+z1).value = c;
+             }
+
+           };
+
+           xhtp.open("POST","http://127.0.0.1:8000/project/concept_name/",true);
+           xhtp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           xhtp.send(JSON.stringify(xx1));
+         };
+
+          function delete_Row(row) {
+                var i = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table').deleteRow(i);
+              }
+
+
+          counter1 = 1;
+          function add_row(){
+          counter1++;
+          var row = document.getElementById("row_cp1");
+          var clone = row.cloneNode(true);
+          var len = document.getElementById('table').rows.length;
+          clone.id = 'row_cp'+counter1;
+          v1++;
+          var inp1 = clone.cells[0].getElementsByTagName('select')[0];
+          inp1.id = 'code'+v1;
+          inp1.value = '';
+          var inp2 = clone.cells[1].getElementsByTagName('select')[0];
+          inp2.id = 'pName'+v1;
+          inp2.value = '';
+
+
+          document.getElementById("table").appendChild(clone);
+
+          }
+
+          function getCookie(name) {
+              var cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                      var cookie = jQuery.trim(cookies[i]);
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+
+          var csrftoken = getCookie('csrftoken');
+          function csrfSafeMethod(method) {
+                  // these HTTP methods do not require CSRF protection
+                  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+              }
+              $.ajaxSetup({
+                  beforeSend: function(xhr, settings) {
+                      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                      }
+                  }
+              });
+
+          $(function () {
+              $("#submit").on('click', function (event) {
+                event.preventDefault();
+                console.log('coming');
+                var v = [];
+                $(".code").each(function(){
+                    v.push($(this).val());
+                })
+                console.log(v);
+                var vv = [];
+                $(".Hours").each(function(){
+                    vv.push($(this).val());
+                });
+                console.log(vv)
+                $.ajax({
+                    type: 'POST',
+                    url: 'concept_test',
+                    data:{
+                      'v' : v ,
+                      'vv' : vv ,
+                    },
+                    success: function (data) {
+
+                        alert("Done");
+                        // console.log(data);
+                      window.location="/";
+
+                    },
+                    error: function (data) {
+                        alert("Some Error Occured");
+                    }
+                });
+              });
+              });
+
+        </script>
+
+  </body>
+</html>

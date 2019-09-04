@@ -1,0 +1,45 @@
+<html>
+    <body>
+    <h1> Add a new Employee here! </h1>
+        <form name = "emp" action = "{% url "add_employee" %}"
+              method = "POST" >{% csrf_token %}
+
+
+
+ <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Contact</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="number" name="id" required></td>
+                <td><input type="text" name="fname" required></td>
+                <td><input type="text" name="lname" required></td>
+                <td><input type="text" name="contact" required></td>
+            </tr>
+            </tbody>
+ </table>
+ <div class="field">
+                <div class="one wide field">
+                    <input type="submit" value="Submit" class="ui primary button" />
+                </div>
+ </div>
+
+
+
+    </body>
+</html>
+
+
+<!-- <form method="post">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  {{ profile_form.as_p }}
+  <button type="submit">Save changes</button>
+</form> -->

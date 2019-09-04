@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+    <body>
+    <h1><center> Welcome Admin! Select your choice </center> </h1>
+    <div class="col-sm-6">
+    <h4> For new project click here</h4>
+    <a href="{% url 'new_project' %}">new project</a>
+    <br>
+    <br>
+    <br>
+    <h4> For adding a new Concept click here</h4>
+    <a href="{% url 'new_concept' %}">new Concept</a>
+    <br>
+    <br>
+    <br>
+    <h4> For new employee click here</h4>
+    <a href="{% url 'new_employee' %}">New Employee</a>
+    <br>
+    <br>
+    <br>
+     <h4> For adding today's work click here</h4>
+    <a href="{% url 'workdone' %}">Submit Work</a>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4> For calculating cost click below</h4>
+    <a href="{% url 'getcost' %}">Get Cost</a>
+    <br>
+    <br>
+    <a href="{% url 'new_salary' %}">change salary</a>
+    <br>
+    <br>
+
+    <a href="{% url 'logout' %}">logout</a>
+  </div>
+  <div class="col-sm-6">
+    <h4> Work details of a particular day</h4>
+    <a href="{% url 'anyday' %}">Get any day's project work details</a>
+    <br>
+    <br>
+    <br>
+    <h4> Fill in the Missed entries for project Work</h4>
+    <a href="{% url 'missed' %}">Missed entry for project</a>
+    <br>
+    <br>
+    <br>
+    <h4> Fill in the Missed entries for Concept Work</h4>
+    <a href="{% url 'missed1' %}">Missed entry for concept</a>
+    <!-- <br>
+    <a href="{% url 'send1' %}">mail</a> -->
+    <br>
+    <br>
+  </div>
+
+
+
+
+    </body>
+</html>

@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+    <meta charset="utf-8">
+  </head>
+  <body bgcolor='lightblue'>
+
+    <p>
+      Hi {{ request.user.first_name }}
+    </p>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+      <br>
+      <!-- <marquee scrollamount="5"><b><font color="red" size="6">Welcome to Smartivity</font></b></marquee> -->
+      <marquee scrollamount="5"><img src="https://cdn.shopify.com/s/files/1/0721/6227/t/21/assets/logo.png?227" width="300" height="100"></marquee>
+      <br>
+    <center>
+      <br>
+      <br>
+
+      <!-- <div class="container">
+        <h2>Today's entries till now</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Project Id</th>
+              <th>No. of Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for i in ti %}
+              <td>{{ i.pid }}</td>
+              <td>{{ i.percent }}</td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
+      <!-- <h3> Today's entries till now </h3>
+      {% for i in ti %}
+      <p>{{ i.pid }} &nbsp; &nbsp; {{ i.percent }}<p>
+      {% endfor %} -->
+      <p><b><font size="5"> If you're working on a Project Fill in the details below</font></b> </p>
+      <div style="background-color:lightgreen">
+    <form name = "form"  id = 'data_send' action = "{% url "data_test" %}"
+       method = "POST" >{% csrf_token %}
+
+              <table id="table" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl1" border="#729111 1px solid">
+                    <tr>
+                        <th align="center">Project ID</th>
+                        <th align="center">Project Name</th>
+                        <th align="center">No. of hours</th>
+                        <th align="center">Description</th>
+
+                    </tr>
+                    <tr id="row_cp1">
+                        <div style="padding-left: 5px">
+                            <td style="padding:5px;">
+
+
+                              <select class="code" required, name = 'code', id = 'code0' onchange="getVal(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in project %}
+                                      <option value="{{ i.p_id }}">{{i.p_id}}</option>
+                                      {% endfor%}
+                                  </select>
+                            </td>
+                            <td style="padding:5px;">
+                              <select class="pname" required, name = 'Project_name', id = 'pName0' onchange="getVal1(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in project %}
+                                      <option value="{{ i.p_name }}">{{i.p_name}}</option>
+                                      {% endfor%}
+                                  </select>
+                              <!-- <input type='text' id="pName0" name="Project_name"> -->
+                            </td>
+                            <td style="padding:5px;">
+                                  <input type="number" class = 'Hours' name="hours" required, id ="hours0", min = "1", max = "16" >
+                            </td>
+
+                            <td style="padding:5px;">
+                                  <input type="text" class = 'desc' name="description" required, id ="desc0" >
+                            </td>
+
+                            <td>
+                              <input type="button" value="Add Row" onclick="addrow()" />
+                            </td>
+                            <td>
+                              <input type="button" id="delPOIbutton" value="Delete" onclick="deleteRow(this)" />
+                            </td>
+
+                        </div>
+                    </tr>
+                </table>
+
+
+              <button style = "border:0px; background-color:lightgrey; margin-top:8%;
+                 height:35px; width:30%;margin-left:5%;" type = "submit"
+                 value = "Submit" , id="submit">
+                 <strong>Submit</strong>
+              </button>
+
+                              </form>
+                            </div>
+                              <br>
+                              <br>
+                <p><b><font size="5"> If you're working on a concept Fill in the details below</font></b> </p>
+                <div style="background-color:lightgreen">
+        <form name = "form1"  id = 'data_send1' action = "{% url "concept_test" %}"
+           method = "POST" >{% csrf_token %}
+
+                  <table id="table1" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl11" border="#729111 1px solid">
+                        <tr>
+                            <th align="center">Concept ID</th>
+                            <th align="center">Concept Name</th>
+                            <th align="center">No. of hours</th>
+                            <th align="center">Description</th>
+
+                        </tr>
+                        <tr id="rowcp1">
+                            <div style="padding-left: 5px">
+                                <td style="padding:5px;">
+
+
+                                  <select class="code1" required, name = 'code1', id = 'code_0' onchange="get_Val(this.value,this.id)" >
+                                          <option value=""></option>
+                                          {% for i in concept %}
+                                          <option value="{{ i.concept_id }}">{{i.concept_id}}</option>
+                                          {% endfor%}
+                                      </select>
+                                </td>
+                                <td style="padding:5px;">
+                                  <select class="pname1" required, name = 'Project_name1', id = 'pName_0' onchange="get_Val1(this.value,this.id)" >
+                                          <option value=""></option>
+                                          {% for i in concept %}
+                                          <option value="{{ i.concept_name }}">{{i.concept_name}}</option>
+                                          {% endfor%}
+                                      </select>
+                                  <!-- <input type='text' id="pName0" name="Project_name"> -->
+                                </td>
+                                <td style="padding:5px;">
+                                      <input type="number" class = 'Hours1' name="hours1" required, id ="hours_0", min = "0", max = "16" >
+                                </td>
+
+                                <td style="padding:5px;">
+                                      <input type="text" class = 'desc1' name="description1" required, id ="desc_0" >
+                                </td>
+
+                                <td>
+                                  <input type="button" value="Add Row" onclick="add_row()" />
+                                </td>
+                                <td>
+                                  <input type="button" id="delPOIbutton1" value="Delete" onclick="delete_Row(this)" />
+                                </td>
+
+                            </div>
+                        </tr>
+                    </table>
+
+
+                  <button style = "border:0px; background-color:lightgrey; margin-top:8%;
+                     height:35px; width:30%;margin-left:5%;" type = "submit"
+                     value = "Submit" , id="submit1">
+                     <strong>Submit</strong>
+                  </button>
+
+                                  </form>
+                                  </div>
+                  </center>
+                  <br>
+
+                  <center>
+                    <a href="{% url 'todo_list' %}"><font size="5">Get work till date</font></a>
+                  </center>
+                  <br>
+                  <br>
+                        <a href="{% url 'logout' %}">logout</a>
+
+        <script language="javascript">
+
+        // For Workdone form
+          var v =0;
+           function getVal(str,id){
+            var xhttp = new XMLHttpRequest();
+            var xx = str;
+            var yy = id;
+            var z = 0;
+            xhttp.onreadystatechange = function() {
+
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                console.log(v);
+                z = yy.charAt(yy.length-1);
+                var c = this.responseText;
+                document.getElementById("pName"+z).value = c;
+              }
+
+            };
+
+            xhttp.open("POST","http://127.0.0.1:8000/project/project_code/",true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(xx));
+          };
+
+          function getVal1(str,id){
+           var xhtp = new XMLHttpRequest();
+           var xx1 = str;
+           var yy1 = id;
+           var z1 = 0;
+           xhtp.onreadystatechange = function() {
+
+             if (this.readyState == 4 && this.status == 200) {
+               console.log(this.responseText);
+               console.log(v);
+               z1 = yy1.charAt(yy1.length-1);
+               var c = this.responseText;
+               document.getElementById("code"+z1).value = c;
+             }
+
+           };
+
+           xhtp.open("POST","http://127.0.0.1:8000/project/project_name/",true);
+           xhtp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           xhtp.send(JSON.stringify(xx1));
+         };
+
+         // For concept form
+         var v1 =0;
+          function get_Val(str,id){
+           var xhttpp = new XMLHttpRequest();
+           var x = str;
+           var y = id;
+           var zz = 0;
+           xhttpp.onreadystatechange = function() {
+
+             if (this.readyState == 4 && this.status == 200) {
+               console.log(this.responseText);
+               console.log(v1);
+               zz = y.charAt(y.length-1);
+               var c1 = this.responseText;
+               document.getElementById("pName_"+zz).value = c1;
+             }
+
+           };
+
+           xhttpp.open("POST","http://127.0.0.1:8000/project/concept_code/",true);
+           xhttpp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           xhttpp.send(JSON.stringify(x));
+         };
+
+         function get_Val1(str,id){
+          var xhtpp = new XMLHttpRequest();
+          var x1 = str;
+          var y1= id;
+          var zz1 = 0;
+          xhtpp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+              console.log(this.responseText);
+              console.log(v1);
+              zz1 = y1.charAt(y1.length-1);
+              var c1 = this.responseText;
+              document.getElementById("code_"+zz1).value = c1;
+            }
+
+          };
+
+          xhtpp.open("POST","http://127.0.0.1:8000/project/concept_name/",true);
+          xhtpp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+          xhtpp.send(JSON.stringify(x1));
+        };
+
+        // For workdone form
+          function deleteRow(row) {
+                var i = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table').deleteRow(i);
+              }
+
+
+          counter = 1;
+          function addrow(){
+          counter++;
+          console.log(counter);
+          var row = document.getElementById("row_cp1");
+          var clone = row.cloneNode(true);
+          var len = document.getElementById('table').rows.length;
+          clone.id = 'row_cp'+counter;
+          v++;
+          var inp1 = clone.cells[0].getElementsByTagName('select')[0];
+          inp1.id = 'code'+v;
+          inp1.value = '';
+          var inp2 = clone.cells[1].getElementsByTagName('select')[0];
+          inp2.id = 'pName'+v;
+          inp2.value = '';
+
+
+          document.getElementById("table").appendChild(clone);
+
+          }
+
+          // For concept form
+          function delete_Row(row) {
+                var i1 = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table1').deleteRow(i1);
+              }
+
+
+          counter1 = 1;
+          function add_row(){
+          counter1++;
+          var row = document.getElementById("rowcp1");
+          var clone = row.cloneNode(true);
+          var len = document.getElementById('table1').rows.length;
+          clone.id = 'rowcp'+counter1;
+          v1++;
+          var inp1 = clone.cells[0].getElementsByTagName('select')[0];
+          inp1.id = 'code_'+v1;
+          inp1.value = '';
+          var inp2 = clone.cells[1].getElementsByTagName('select')[0];
+          inp2.id = 'pName_'+v1;
+          inp2.value = '';
+
+
+          document.getElementById("table1").appendChild(clone);
+
+          }
+
+          function getCookie(name) {
+              var cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                      var cookie = jQuery.trim(cookies[i]);
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+
+          var csrftoken = getCookie('csrftoken');
+          function csrfSafeMethod(method) {
+                  // these HTTP methods do not require CSRF protection
+                  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+              }
+              $.ajaxSetup({
+                  beforeSend: function(xhr, settings) {
+                      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                      }
+                  }
+              });
+
+          $(function () {
+              $("#submit1").on('click', function (event) {
+                event.preventDefault();
+                console.log('coming');
+                var a = [];
+                $(".code1").each(function(){
+                    a.push($(this).val());
+                })
+                console.log(a);
+                var aa = [];
+                $(".Hours1").each(function(){
+                    aa.push($(this).val());
+                });
+                console.log(aa);
+                var aaa = []
+                $(".desc1").each(function(){
+                  aaa.push($(this).val());
+                })
+                console.log(aaa);
+                $.ajax({
+                    type: 'POST',
+                    url: 'concept_test',
+                    data:{
+                      'a' : a ,
+                      'aa' : aa ,
+                      'aaa' : aaa
+                    },
+                    success: function (data) {
+
+                        alert("Done");
+                        // console.log(data);
+                      location.reload();
+
+                    },
+                    error: function (data) {
+                        alert("Some Error Occured");
+                    }
+                });
+              });
+              });
+
+
+              function getCookie(name) {
+                  var cookieValue = null;
+                  if (document.cookie && document.cookie !== '') {
+                      var cookies = document.cookie.split(';');
+                      for (var i = 0; i < cookies.length; i++) {
+                          var cookie = jQuery.trim(cookies[i]);
+                          // Does this cookie string begin with the name we want?
+                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                          }
+                      }
+                  }
+                  return cookieValue;
+              }
+
+              var csrftoken = getCookie('csrftoken');
+              function csrfSafeMethod(method) {
+                      // these HTTP methods do not require CSRF protection
+                      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                  }
+                  $.ajaxSetup({
+                      beforeSend: function(xhr, settings) {
+                          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                          }
+                      }
+                  });
+
+              $(function () {
+                  $("#submit").on('click', function (event) {
+                    event.preventDefault();
+                    console.log('coming');
+                    var v = [];
+                    $(".code").each(function(){
+                        v.push($(this).val());
+                    })
+                    console.log(v);
+                    var vv = [];
+                    $(".Hours").each(function(){
+                        vv.push($(this).val());
+                    });
+                    console.log(vv);
+                    var vvv =[];
+                    $(".desc").each(function(){
+                      vvv.push($(this).val());
+                    });
+                    console.log(vvv);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'data_test',
+                        data:{
+                          'v' : v ,
+                          'vv' : vv ,
+                          'vvv':vvv
+                        },
+                        success: function (data) {
+
+                            alert("Done");
+                            // console.log(data);
+                          location.reload();
+
+                        },
+                        error: function (data) {
+                            alert("Some Error Occured");
+                        }
+                    });
+                  });
+                  });
+
+        </script>
+
+  </body>
+</html>

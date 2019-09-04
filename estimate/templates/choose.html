@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <p>
+      Hi {{ request.user.first_name }}
+    </p>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+      <br>
+      <br>
+
+      <p>
+        Current Project Work submission
+      </p>
+      <a href="{% url 'workdone' %}">Workdone</a>
+      <br>
+      <br>
+      <p>
+        Working on a concept
+      </p>
+      <a href="{% url 'concept' %}">Concept</a>
+      <br>
+      <br>
+      <a href="{% url 'logout' %}">Logout</a>
+  </body>
+</html>

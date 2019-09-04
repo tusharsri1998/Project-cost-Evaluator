@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+    <meta charset="utf-8">
+  </head>
+  <body bgcolor='lightblue'>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+      <br>
+      <!-- <marquee scrollamount="5"><b><font color="red" size="6">Welcome to Smartivity</font></b></marquee> -->
+      <marquee scrollamount="5"><img src="https://cdn.shopify.com/s/files/1/0721/6227/t/21/assets/logo.png?227" width="300" height="100"></marquee>
+      <br>
+    <center>
+
+                <p><b><font size="5"> If you're working on a concept Fill in the details below</font></b> </p>
+                <div style="background-color:lightgreen">
+        <form name = "form1"  id = 'missed_send1' action = "{% url "right" %}"
+           method = "POST" >{% csrf_token %}
+                 <label>Date of entry<label>
+                 <input type="date" name="date">
+                  <table id="table1" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl11" border="#729111 1px solid">
+                        <tr>
+                            <th aligh="center">Employee Id</th>
+                            <th align="center">Concept ID</th>
+                            <th align="center">Concept Name</th>
+                            <th align="center">No. of hours</th>
+                            <th align="center">Description</th>
+
+                        </tr>
+                        <tr id="rowcp1">
+                            <div style="padding-left: 5px">
+
+                              <td style="padding:5px;">
+                                <select name = 'empid1', id = 'empid_0'>
+                                        <option value=""></option>
+                                        {% for i in user %}
+                                        <option value="{{ i.username }}">{{i.username}}</option>
+                                        {% endfor%}
+                                    </select>
+                              </td>
+                                <td style="padding:5px;">
+                                  <select class="code1" required, name = 'code1', id = 'code_0' onchange="get_Val(this.value,this.id)" >
+                                          <option value=""></option>
+                                          {% for i in concept %}
+                                          <option value="{{ i.concept_id }}">{{i.concept_id}}</option>
+                                          {% endfor%}
+                                      </select>
+                                </td>
+                                <td style="padding:5px;">
+                                  <select class="pname1" required, name = 'Project_name1', id = 'pName_0' onchange="get_Val1(this.value,this.id)" >
+                                          <option value=""></option>
+                                          {% for i in concept %}
+                                          <option value="{{ i.concept_name }}">{{i.concept_name}}</option>
+                                          {% endfor%}
+                                      </select>
+                                  <!-- <input type='text' id="pName0" name="Project_name"> -->
+                                </td>
+                                <td style="padding:5px;">
+                                      <input type="number" class = 'Hours1' name="hours1" required, id ="hours_0", min = "0", max = "16" >
+                                </td>
+
+                                <td style="padding:5px;">
+                                      <input type="text" class = 'desc1' name="description1" required, id ="desc_0" >
+                                </td>
+
+                                <td>
+                                  <input type="button" value="Add Row" onclick="add_row()" />
+                                </td>
+                                <td>
+                                  <input type="button" id="delPOIbutton1" value="Delete" onclick="delete_Row(this)" />
+                                </td>
+
+                            </div>
+                        </tr>
+                    </table>
+
+
+                  <button style = "border:0px; background-color:lightgrey; margin-top:8%;
+                     height:35px; width:30%;margin-left:5%;" type = "submit"
+                     value = "Submit" , id="submit1">
+                     <strong>Submit</strong>
+                  </button>
+
+                                  </form>
+                                  </div>
+                  </center>
+                  <br>
+
+                        <a href="{% url 'logout' %}">logout</a>
+
+        <script language="javascript">
+
+         // For concept form
+         var v1 =0;
+          function get_Val(str,id){
+           var xhttpp = new XMLHttpRequest();
+           var x = str;
+           var y = id;
+           var zz = 0;
+           xhttpp.onreadystatechange = function() {
+
+             if (this.readyState == 4 && this.status == 200) {
+               console.log(this.responseText);
+               console.log(v1);
+               zz = y.charAt(y.length-1);
+               var c1 = this.responseText;
+               document.getElementById("pName_"+zz).value = c1;
+             }
+
+           };
+
+           xhttpp.open("POST","http://127.0.0.1:8000/project/concept_code/",true);
+           xhttpp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           xhttpp.send(JSON.stringify(x));
+         };
+
+         function get_Val1(str,id){
+          var xhtpp = new XMLHttpRequest();
+          var x1 = str;
+          var y1= id;
+          var zz1 = 0;
+          xhtpp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+              console.log(this.responseText);
+              console.log(v1);
+              zz1 = y1.charAt(y1.length-1);
+              var c1 = this.responseText;
+              document.getElementById("code_"+zz1).value = c1;
+            }
+
+          };
+
+          xhtpp.open("POST","http://127.0.0.1:8000/project/concept_name/",true);
+          xhtpp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+          xhtpp.send(JSON.stringify(x1));
+        };
+
+          // For concept form
+          function delete_Row(row) {
+                var i1 = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table1').deleteRow(i1);
+              }
+
+
+          counter1 = 1;
+          function add_row(){
+          counter1++;
+          var row = document.getElementById("rowcp1");
+          var clone = row.cloneNode(true);
+          var len = document.getElementById('table1').rows.length;
+          clone.id = 'rowcp'+counter1;
+          v1++;
+          var inp1 = clone.cells[1].getElementsByTagName('select')[0];
+          inp1.id = 'code_'+v1;
+          inp1.value = '';
+          var inp2 = clone.cells[2].getElementsByTagName('select')[0];
+          inp2.id = 'pName_'+v1;
+          inp2.value = '';
+
+
+          document.getElementById("table1").appendChild(clone);
+
+          }
+
+        </script>
+
+  </body>
+</html>

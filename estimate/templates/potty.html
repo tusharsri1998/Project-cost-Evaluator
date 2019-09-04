@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+    <script language="javascript">
+      var num_rows = 1 ;
+      console.log("initiate") ;
+      $(document).ready(function () {
+        $(".code").on('change', function(){
+          console.log("Here") ;
+          var Id = $(this).attr('id') ;
+          var value = $(this).val() ;
+          console.log(Id) ;
+          console.log(value) ;
+          $.ajax({
+            url : 'http://127.0.0.1:8000/project/project_code/',
+            type: "POST",
+            data: {'projId':value},
+            success: function(response) {
+              response = JSON.parse(response) ;
+              $(".project_name").val(response[0].fields.p_name) ;
+              console.log(response[0].fields.p_name) ;
+            }
+          });
+        });
+     });
+
+      function deleteRow(row) {
+            var i = row.parentNode.parentNode.rowIndex;
+            document.getElementById('table').deleteRow(i);
+          }
+
+
+      function insRow() {
+        num_rows = num_rows + 1 ;
+        console.log(num_rows);
+        var x = document.getElementById('table');
+        var new_row = x.rows[1].cloneNode(true);
+        var len = x.rows.length;
+
+        var inp1 = new_row.cells[0].getElementsByTagName('select')[0];
+        inp1.id += len;
+        inp1.value = '';
+        var inp2 = new_row.cells[1].getElementsByTagName('input')[0];
+        inp2.id += len;
+        inp2.value = '';
+        var inp3 = new_row.cells[2].getElementsByTagName('input')[0];
+        inp3.id += len;
+        inp3.value = '';
+        x.appendChild(new_row);
+      }
+
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = jQuery.trim(cookies[i]);
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+
+      function calculateSum(){
+          var sum = 0;
+          console.log('chal')
+          //iterate through each textboxes and add the values
+          $(".percent").each(function() {
+              //add only if the value is number
+              if (!isNaN(this.value) && this.value.length != 0) {
+                  sum += parseFloat(this.value);
+                  console.log(sum);
+              }
+              else if (this.value.length != 0){
+              }
+          });
+
+          $("input#sum1").val(sum.toFixed(2));
+          return sum;
+
+          // submit(sum);
+      }
+      $("body").on('.percent', function(e) {
+
+        e.preventDefault();
+        calculateSum();
+
+      });
+
+      var csrftoken = getCookie('csrftoken');
+      function csrfSafeMethod(method) {
+              // these HTTP methods do not require CSRF protection
+              return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+          }
+          $.ajaxSetup({
+              beforeSend: function(xhr, settings) {
+                  if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                      xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                  }
+              }
+          });
+      $(function () {
+              $("#submit{{ forloop.counter }}").on('click', function (event) {
+                  console.log('coming');
+                  event.preventDefault();
+                  var form = $('#data_send');
+                  var that = $(this);
+                  // url = that.attr('action');
+                  // type = that.attr('method');
+                  // var s1 = calculateSum();
+
+                  // if (s1==100){
+
+                    var v = [];
+                    $(".code").each(function(){
+                        v.push($(this).val());
+                    })
+                    console.log(v) ;
+                    var vvv = [];
+                    $(".percent").each(function(){
+                        vvv.push($(this).val());
+                    })
+                    var data = document.getElementById('table').rows.length;
+                    var s1 = calculateSum();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://127.0.0.1:8000/project/workdone/data_transfer',
+                        // data: form.serialize()+"&v"+"&vvv",
+                        data: form.serialize(),
+                        // data:{
+                        //   code : $('#code{{ forloop.counter }}').val() ,
+                        //   percent : $('#percent{{ forloop.counter }}').val() ,
+                        // },
+                        success: function (data) {
+                            if (s1!=100){
+                              alert("fuck off")
+                            }
+                            else{
+                            alert("Done");
+                            // console.log(data);
+                          window.location="/";
+                            }
+                        },
+                        error: function (data) {
+                            alert("Some Error Occured");
+                        }
+                    });
+
+                  // }else{
+                  //   alert("fuck off") ;
+                  // }
+
+            });
+        });
+
+
+    </script>
+
+    <p>
+      Hi {{ request.user }}
+    </p>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+
+    <form name = "form"  id = 'data_send' action = "{% url "data_transfer" %}"
+       method = "POST" >{% csrf_token %}
+
+              <table id="table" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl1" border="#729111 1px solid">
+                    <tr>
+                        <th align="center">Project ID</th>
+                        <th align="center">Project Code</th>
+                        <th align="center">Percent</th>
+
+                    </tr>
+                    <tr>
+                        <div style="padding-left: 5px">
+                            <td style="padding:5px;">
+
+
+                              <select class="code" required, name = 'code', id = 'code{{ forloop.counter }}' >
+                                      <option value=""></option>
+                                      {% for i in project %}
+                                      <option value="{{ i.p_id }}">{{i.p_id}}</option>
+                                      {% endfor%}
+                                  </select>
+                            </td>
+                            <td style="padding:5px;">
+
+                              <input type="text" class="project_name" required name="pname" id="pName{{ forloop.counter }}">
+
+                            </td>
+                            <td style="padding:5px;">
+                                  <input type="number" class = 'percent' name="percent" required, id ="percent{{ forloop.counter }}", min = "1", max = "100" >
+                            </td>
+
+                            <td>
+                              <input type="button" value="Add Row" onclick="insRow()" />
+                            </td>
+                            <td>
+                              <input type="button" id="delPOIbutton" value="Delete" onclick="deleteRow(this)" />
+                            </td>
+
+                        </div>
+                    </tr>
+                </table>
+
+
+              <button style = "border:0px; background-color:#4285F4; margin-top:8%;
+                 height:35px; width:30%;margin-left:5%;" type = "submit"
+                 value = "Submit" , id = "submit{{ forloop.counter }}" >
+                 <strong>Submit</strong>
+              </button>
+
+                              </form>
+
+  </body>
+</html>

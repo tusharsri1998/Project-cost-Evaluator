@@ -1,0 +1,33 @@
+<html>
+    <body>
+    <h1> Add a new Concept here! </h1>
+        <form name = "proj1" action = "{% url "add_concept" %}"
+              method = "POST" >{% csrf_token %}
+
+
+
+ <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Concept Id</th>
+                    <th>Concept Name</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="text" name="code" required></td>
+                <td><input type="text" name="concept" required></td>
+            </tr>
+            </tbody>
+ </table>
+ <div class="field">
+                <div class="one wide field">
+                    <input type="submit" value="Submit" class="ui primary button" />
+                </div>
+ </div>
+
+
+
+    </body>
+</html>

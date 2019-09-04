@@ -1,0 +1,35 @@
+<html>
+    <body>
+    <h1> Change salary here! </h1>
+        <form name = "change" action = "{% url "change_salary" %}"
+              method = "POST" >{% csrf_token %}
+
+    <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>New Salary</th>
+        </tr>
+            </thead>
+         <tbody>
+            <tr>
+                <td><select class="employ" required, name = 'employee', id = 'emp'>
+                        <option value=""></option>
+                        {% for i in employee %}
+                        <option value="{{ i.emp_id }}">{{i.emp_id}}</option>
+                        {% endfor%}
+                    </select></td>
+                <td><input type="number" name="salary" required></td>
+        </tr>
+            </tbody>
+ </table>
+    <div class="field">
+                <div class="one wide field">
+                    <input type="submit" value="Submit" class="ui primary button" />
+                </div>
+ </div>
+
+
+
+    </body>
+</html>

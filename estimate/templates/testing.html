@@ -1,0 +1,305 @@
+<html>
+      <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      </head>
+
+       <body>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script language="javascript">
+          function deleteRow(row) {
+                var i = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table').deleteRow(i);
+              }
+
+
+          function insRow() {
+            console.log('hi');
+            var x = document.getElementById('table');
+            var new_row = x.rows[1].cloneNode(true);
+            var len = x.rows.length;
+
+            var inp1 = new_row.cells[0].getElementsByTagName('select')[0];
+            inp1.id += len;
+            inp1.value = '';
+            var inp2 = new_row.cells[1].getElementsByTagName('select')[0];
+            inp2.id += len;
+            inp2.value = '';
+            var inp3 = new_row.cells[2].getElementsByTagName('input')[0];
+            inp3.id += len;
+            inp3.value = '';
+            x.appendChild(new_row);
+            return len;
+
+          }
+
+          function getCookie(name) {
+              var cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                      var cookie = jQuery.trim(cookies[i]);
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+
+          var csrftoken = getCookie('csrftoken');
+
+
+
+          function csrfSafeMethod(method) {
+                  // these HTTP methods do not require CSRF protection
+                  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+              }
+              $.ajaxSetup({
+                  beforeSend: function(xhr, settings) {
+                      if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                      }
+                  }
+              });
+                  $(function () {
+                          $("#submit").on('click', function (event) {
+                              console.log('coming');
+                              event.preventDefault();
+                              var y = document.getElementById("table").rows.length;
+                              console.log(y)
+                              var that = $(this);
+                              url = that.attr('action');
+                              type = that.attr('method');
+                              var s1 = calculateSum();
+                              if (s1==100){
+                                $.ajax({
+                                      url : url,
+                                      type: "POST",
+                                      data: y,
+                                      success : function(data) {
+                                          alert("Successfully sent rowcount to Django");
+                                      },
+                                      error : function(xhr,errmsg,err) {
+                                          alert("Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText);
+                                      }
+                                  });
+
+
+                                          // console.log('potty');
+                                          // var posting = $.post(url, that);
+                                          // console.log('potty');
+                                          // posting.done(function (data) {
+                                          //     alert('Done');
+                                          //     window.location = "/";
+                                          // });
+                                          // posting.fail(function (data) {
+                                          //     alert('Failed to update');
+                                          //     location.reload();
+                                          // });
+                                // var obj1 = document$('#pCode') ;
+                                // var obj2 = $('#pNAme') ;
+                                // var form = $('#data_send');
+                                var v = [];
+                                $(".code").each(function(){
+                                    v.push($(this).val());
+                                })
+                                console.log(v) ;
+                                var vv = [];
+                                $(".project_name").each(function(){
+                                    vv.push($(this).val());
+                                })
+                                console.log(vv) ;
+                                var vvv = [];
+                                $(".percent").each(function(){
+                                    vvv.push($(this).val());
+                                })
+                                console.log(vvv) ;
+
+
+
+                                }else{
+                                  alert("fuck off") ;
+                                }
+
+
+
+
+
+                          });
+                      });
+
+
+
+            function calculateSum(){
+                var sum = 0;
+                console.log('chal')
+                //iterate through each textboxes and add the values
+                $(".percent").each(function() {
+                    //add only if the value is number
+                    if (!isNaN(this.value) && this.value.length != 0) {
+                        sum += parseFloat(this.value);
+                        console.log(sum);
+                    }
+                    else if (this.value.length != 0){
+                    }
+                });
+
+                $("input#sum1").val(sum.toFixed(2));
+                return sum;
+
+                // submit(sum);
+            }
+            $("body").on('.percent', function(e) {
+
+              e.preventDefault();
+              calculateSum();
+
+            });
+
+
+      </script>
+
+      <!-- <script type="text/javascript">
+        $(function () {
+                                            $("#submit{{ forloop.counter }}").on('click', function (event) {
+                                                console.log('coming');
+                                                event.preventDefault();
+
+
+                                                  $.ajax({
+                                                      type: 'POST',
+                                                      url: 'data_transfer',
+                                                      data: {
+
+                                                          code : $('#code{{ forloop.counter }}').val() ,
+                                                          project_name : $('#p_name{{ forloop.counter }}').val() ,
+                                                          percent : $('#percent{{ forloop.counter }}').val() ,
+                                                          date : $('#date{{ forloop.counter }}').val() ,
+
+                                                      },
+                                                      success: function (data) {
+                                                          alert("Done");
+                                                          location.reload();
+                                                      },
+                                                      error: function (data) {
+                                                          alert("Some Error Occured");
+                                                      }
+                                                  });
+
+                                            });
+                                        });
+                    </script> -->
+
+
+
+
+
+
+
+         <p>
+           Hi {{ request.user }}
+         </p>
+         <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+           </center>
+
+
+          <form name = "form"  id = 'data_send' action = "{% url "data_transfer" %}"
+             method = "POST" >{% csrf_token %}
+
+
+
+    <table id="table" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl1" border="#729111 1px solid">
+            <tr>
+                <th align="center">Project ID</th>
+                <th align="center">Project Code</th>
+                <th align="center">Percent</th>
+
+            </tr>
+            <tr>
+                <div style="padding-left: 5px">
+                    <td style="padding:5px;">
+
+
+                      <select class="code" required >
+                              <option name="options" value=""></option>
+                              {% for i in project %}
+                              <option name="options" value="{{ i.p_id }}">{{i.p_id}}</option>
+                              {% endfor%}
+                          </select>
+                    </td>
+                    <td style="padding:5px;">
+
+
+                      <select class="project_name" required , id = "pName">
+                                 <option name="options" value=""></option>
+                                 {% for i in project %}
+                                 <option name="options" value="{{ i.p_name }}">{{i.p_name}}</option>
+                                 {% endfor%}
+                             </select>
+                    </td>
+                    <td style="padding:5px;">
+                          <input type="number" class = 'percent' name="percent" required, id ="percent", min = "1", max = "100" >
+                    </td>
+
+
+
+                    <td>
+                      <input type="button" value="Add Row" onclick="insRow()" />
+                    </td>
+                    <td>
+                      <input type="button" id="delPOIbutton" value="Delete" onclick="deleteRow(this)" />
+                    </td>
+
+                </div>
+            </tr>
+        </table>
+
+            <!-- <input type='text' id='sum1' name = 'input' /> -->
+
+
+            <!-- <div>
+          <input type="button" name="submit" id="submit{{ forloop.counter }}" class="btn btn-info" value="Submit" />
+          </div> -->
+                    <button style = "border:0px; background-color:#4285F4; margin-top:8%;
+                       height:35px; width:30%;margin-left:5%;" type = "submit"
+                       value = "Submit" , id = "submit"  >
+                       <strong>Submit</strong>
+                    </button>
+
+
+
+                                    </form>
+                              <a href="{% url 'logout' %}">logout</a>
+                                 </body>
+
+
+
+
+
+</html>
+
+
+
+
+
+<!--
+
+$("#add_new").click(function () {
+
+  $("#maintable").each(function () {
+
+      var tds = '<tr>';
+      jQuery.each($('tr:last td', this), function () {
+          tds += '<td>' + $(this).html() + '</td>';
+      });
+      tds += '</tr>';
+      if ($('tbody', this).length > 0) {
+          $('tbody', this).append(tds);
+      } else {
+          $(this).append(tds);
+      }
+  });
+}); -->

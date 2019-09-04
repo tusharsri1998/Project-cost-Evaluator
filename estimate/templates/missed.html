@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+    <meta charset="utf-8">
+  </head>
+  <body bgcolor='lightblue'>
+    <center><h3> Today's Date  <script> document.write(new Date().toLocaleDateString()); </script></h3>
+      </center>
+      <br>
+      <!-- <marquee scrollamount="5"><b><font color="red" size="6">Welcome to Smartivity</font></b></marquee> -->
+      <marquee scrollamount="5"><img src="https://cdn.shopify.com/s/files/1/0721/6227/t/21/assets/logo.png?227" width="300" height="100"></marquee>
+      <br>
+    <center>
+
+      <p><b><font size="5"> If you're working on a Project Fill in the details below</font></b> </p>
+      <div style="background-color:lightgreen">
+    <form name = "form"  id = 'missed_send' action = "{% url "left" %}"
+       method = "POST" >{% csrf_token %}
+              <label>Date of entry<label>
+              <input type="date" name="date">
+              <table id="table" width="50%" cellpadding="0" cellspacing="0" class="pdzn_tbl1" border="#729111 1px solid">
+                    <tr>
+                        <th align="center">Employee Id</th>
+                        <th align="center">Project ID</th>
+                        <th align="center">Project Name</th>
+                        <th align="center">No. of hours</th>
+                        <th align="center">Description</th>
+
+                    </tr>
+                    <tr id="row_cp1">
+                        <div style="padding-left: 5px">
+                          <td style="padding:5px;">
+                            <select name = 'empid', id = 'empid0'>
+                                    <option value=""></option>
+                                    {% for i in user %}
+                                    <option value="{{ i.username }}">{{i.username}}</option>
+                                    {% endfor%}
+                                </select>
+                          </td>
+                            <td style="padding:5px;">
+                              <select class="code" required, name = 'code', id = 'code0' onchange="getVal(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in project %}
+                                      <option value="{{ i.p_id }}">{{i.p_id}}</option>
+                                      {% endfor%}
+                                  </select>
+                            </td>
+                            <td style="padding:5px;">
+                              <select class="pname" required, name = 'Project_name', id = 'pName0' onchange="getVal1(this.value,this.id)" >
+                                      <option value=""></option>
+                                      {% for i in project %}
+                                      <option value="{{ i.p_name }}">{{i.p_name}}</option>
+                                      {% endfor%}
+                                  </select>
+                              <!-- <input type='text' id="pName0" name="Project_name"> -->
+                            </td>
+                            <td style="padding:5px;">
+                                  <input type="number" class = 'Hours' name="hours" required, id ="hours0", min = "1", max = "16" >
+                            </td>
+
+                            <td style="padding:5px;">
+                                  <input type="text" class = 'desc' name="description" required, id ="desc0" >
+                            </td>
+
+                            <td>
+                              <input type="button" value="Add Row" onclick="addrow()" />
+                            </td>
+                            <td>
+                              <input type="button" id="delPOIbutton" value="Delete" onclick="deleteRow(this)" />
+                            </td>
+
+                        </div>
+                    </tr>
+                </table>
+
+
+              <button style = "border:0px; background-color:lightgrey; margin-top:8%;
+                 height:35px; width:30%;margin-left:5%;" type = "submit"
+                 value = "Submit" , id="submit">
+                 <strong>Submit</strong>
+              </button>
+
+                              </form>
+                            </div>
+                              <br>
+                              <br>
+                  </center>
+                  <br>
+                        <a href="{% url 'logout' %}">logout</a>
+
+        <script language="javascript">
+
+        // For Workdone form
+          var v =0;
+           function getVal(str,id){
+            var xhttp = new XMLHttpRequest();
+            var xx = str;
+            var yy = id;
+            var z = 0;
+            xhttp.onreadystatechange = function() {
+
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                console.log(v);
+                z = yy.charAt(yy.length-1);
+                var c = this.responseText;
+                document.getElementById("pName"+z).value = c;
+              }
+
+            };
+
+            xhttp.open("POST","http://127.0.0.1:8000/project/project_code/",true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(xx));
+          };
+
+          function getVal1(str,id){
+           var xhtp = new XMLHttpRequest();
+           var xx1 = str;
+           var yy1 = id;
+           var z1 = 0;
+           xhtp.onreadystatechange = function() {
+
+             if (this.readyState == 4 && this.status == 200) {
+               console.log(this.responseText);
+               console.log(v);
+               z1 = yy1.charAt(yy1.length-1);
+               var c = this.responseText;
+               document.getElementById("code"+z1).value = c;
+             }
+
+           };
+
+           xhtp.open("POST","http://127.0.0.1:8000/project/project_name/",true);
+           xhtp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+           xhtp.send(JSON.stringify(xx1));
+         };
+
+
+        // For workdone form
+          function deleteRow(row) {
+                var i = row.parentNode.parentNode.rowIndex;
+                document.getElementById('table').deleteRow(i);
+              }
+
+
+          counter = 1;
+          function addrow(){
+          counter++;
+          console.log(counter);
+          var row = document.getElementById("row_cp1");
+          var clone = row.cloneNode(true);
+          var len = document.getElementById('table').rows.length;
+          clone.id = 'row_cp'+counter;
+          v++;
+          var inp1 = clone.cells[1].getElementsByTagName('select')[0];
+          inp1.id = 'code'+v;
+          inp1.value = '';
+          var inp2 = clone.cells[2].getElementsByTagName('select')[0];
+          inp2.id = 'pName'+v;
+          inp2.value = '';
+
+
+          document.getElementById("table").appendChild(clone);
+
+          }
+
+        </script>
+
+  </body>
+</html>
