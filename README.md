@@ -12,4 +12,6 @@ The environment contains most of the dependencies of the project. To activate th
 Type the command env\scripts\activate(for windows, check for other OS).
 Once activated, go inside estimate folder. Then type the command, 'python manage.py runserver'.If everything is done correctly development will start on localhost:8000.
 
+In order to access the database you need to first create a super user . command - python manage.py createsuperuser
+
 ***If you go through the code of the app there is a python file settings.py, before starting the development it is imperative to update the location of database file inside the settings.py to the location of db.sqlite3 inside the estimate folder.
